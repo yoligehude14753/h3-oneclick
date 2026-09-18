@@ -1,5 +1,5 @@
 {
-  "schema_version": "0.3.0",
+  "schema_version": "0.3.1",
   "generated_at": "2026-08-22",
   "assets": [
     {
@@ -199,6 +199,21 @@
           "url": "https://raw.githubusercontent.com/Comfy-Org/workflow_templates/main/templates/video_minimax_h3_t2v.json",
           "transport": "https",
           "fallback_order": 0,
+          "probe_status": "unprobed",
+          "status": "verified"
+        },
+        {
+          "id": "src-h3-workflow-mirror",
+          "asset_id": "h3-workflow-t2v",
+          "source_type": "mirror_github",
+          "source_role": "same_file_mirror",
+          "repository_or_share": "Comfy-Org/workflow_templates",
+          "revision_or_version": "main",
+          "file_path_or_id": "templates/video_minimax_h3_t2v.json",
+          "url": "https://cdn.jsdelivr.net/gh/Comfy-Org/workflow_templates@main/templates/video_minimax_h3_t2v.json",
+          "transport": "https",
+          "fallback_order": 1,
+          "mirror_of_asset_id": "h3-workflow-t2v",
           "probe_status": "unprobed",
           "status": "verified"
         }

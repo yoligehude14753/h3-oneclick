@@ -1,0 +1,10 @@
+flowchart LR
+  User["用户 / 浏览器 Web UI :8765"] --> API["HTTP JSON API /api/*"]
+  API --> Scan["detect: 硬件探测 GPU/显存/RAM/磁盘/ffmpeg + ComfyUI 实例扫描 ▲ U-0.3.1"]
+  Scan --> Resolve["resolver: profile 门控 + 打分选档"]
+  Resolve --> Plan["planner: 安装计划 + 资产复用判定"]
+  Plan --> Install["install: source 探测 primary→mirror fallback + 下载/复用 + adapter 写入 ▲ U-0.3.1"]
+  Install --> Comfy["ComfyUI 运行时 (venv, GPU0, :18189)"]
+  Install --> Receipt["部署回执 state/receipts"]
+  Comfy --> Submit["workflow 提交 /prompt (scripts/convert_h3_prompt.py) ▲ U-0.3.1"]
+  Submit --> Video["输出视频 output/video/*.mp4"]
