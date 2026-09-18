@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>H3 OneClick Launcher</title>
+  <link rel="stylesheet" href="/assets/styles.css" />
+</head>
+<body>
+  <div class="grain"></div>
+  <header class="topbar">
+    <div class="brand-lockup">
+      <div class="brand-mark">H3</div>
+      <div>
+        <p class="eyebrow">LOCAL DEPLOYMENT CONTROL</p>
+        <h1>OneClick Launcher</h1>
+      </div>
+    </div>
+    <div class="top-status" id="topStatus"><span class="status-dot"></span>未扫描</div>
+  </header>
+
+  <main class="shell">
+    <aside class="rail">
+      <div class="rail-label">FLOW</div>
+      <ol>
+        <li class="active" data-step="scan"><span>01</span><b>环境扫描</b><small>hardware + software</small></li>
+        <li data-step="stack"><span>02</span><b>配置栈</b><small>resolver decision</small></li>
+        <li data-step="plan"><span>03</span><b>安装计划</b><small>sources + paths</small></li>
+        <li data-step="run"><span>04</span><b>运行回执</b><small>launch + smoke</small></li>
+      </ol>
+      <div class="rail-foot">主源失败时仅切换同文件镜像<br />替代栈需要明确确认</div>
+    </aside>
+
+    <section class="content">
+      <section class="hero panel" id="scanPanel">
+        <div>
+          <p class="eyebrow lime">01 / READ-ONLY PREFLIGHT</p>
+          <h2>先看清机器，再决定下载什么。</h2>
+          <p class="lede">启动器不把 4-step 当成显卡门槛。它会把硬件、已有 ComfyUI、模型目录、插件和工作负载合成一个可解释的配置栈。</p>
+        </div>
+        <button class="primary" id="scanBtn">开始扫描 <span>↗</span></button>
+      </section>
+
+      <section class="grid two" id="snapshotGrid">
+        <article class="panel metric-card"><div class="card-kicker">HARDWARE</div><div class="metric" id="hardwareMetric">—</div><p id="hardwareDetail">尚未读取 GPU / RAM / 后端</p></article>
+        <article class="panel metric-card"><div class="card-kicker">SOFTWARE FIELD</div><div class="metric" id="softwareMetric">—</div><p id="softwareDetail">尚未发现 ComfyUI 实例</p></article>
+      </section>
+
+      <section class="panel stack-panel" id="stackPanel">
+        <div class="section-head"><div><p class="eyebrow lime">02 / STACK RESOLVER</p><h3>最佳配置，不是最少步数。</h3></div><span class="pill" id="decisionPill">等待扫描</span></div>
+        <div class="control-row">
+          <label>目标步数偏好<select id="stepsSelect"><option value="4">4-step</option><option value="8">8-step</option><option value="20">20-step</option></select></label>
+          <label>工作负载<select id="taskSelect"><option value="t2v">T2V 文生视频</option><option value="i2v">I2V 图生视频</option><option value="r2v">R2V 参考视频</option></select></label>
+          <label>时长（秒）<input id="secondsInput" type="number" min="1" max="30" value="5" /></label>
+          <button class="secondary" id="recommendBtn" disabled>计算推荐</button>
+        </div>
+        <div class="decision" id="decisionBox"><div class="empty">扫描后这里会显示实际 stack、插件前置和阻断原因。</div></div>
+        <div class="alternatives" id="alternatives"></div>
+      </section>
+
+      <section class="panel plan-panel" id="planPanel">
+        <div class="section-head"><div><p class="eyebrow lime">03 / SOURCE-AWARE PLAN</p><h3>主源直连，失败切同文件镜像。</h3></div><span class="pill" id="planPill">未生成</span></div>
+        <div class="source-policy"><label><input type="checkbox" id="mirrorToggle" checked /> 允许同文件中国镜像</label><label><input type="checkbox" id="alternativeToggle" /> 允许兼容替代栈（需要确认）</label></div>
+        <div class="plan-meta" id="planMeta"><span>源与目标路径会在推荐完成后显示。</span></div>
+        <div class="source-table-wrap"><table><thead><tr><th>资产</th><th>主源</th><th>中国备用</th><th>目标路径</th><th>状态</th></tr></thead><tbody id="sourceRows"><tr><td colspan="5" class="empty">暂无计划</td></tr></tbody></table></div>
+        <div class="plan-actions"><label class="target-input">安装目录<input id="targetDir" placeholder="默认使用现有实例或 ./h3-oneclick-runtime" /></label><label class="bootstrap-toggle"><input id="bootstrapToggle" type="checkbox" checked /> 无现有实例时安装 ComfyUI 运行时</label><button class="secondary" id="planBtn" disabled>生成安装计划</button><button class="secondary" id="probeBtn" disabled>探测来源</button><button class="primary" id="installBtn" disabled>开始安装 <span>↗</span></button></div>
+      </section>
+
+      <section class="panel run-panel" id="runPanel">
+        <div class="section-head"><div><p class="eyebrow lime">04 / RECEIPT</p><h3>每一步都留下可读回执。</h3></div><span class="pill" id="jobPill">未运行</span></div>
+        <div class="progress-track"><div id="progressBar"></div></div>
+        <div class="job-grid"><div><span class="card-kicker">STATE</span><strong id="jobState">—</strong></div><div><span class="card-kicker">SOURCE USED</span><strong id="sourceUsed">—</strong></div><div><span class="card-kicker">MESSAGE</span><strong id="jobMessage">—</strong></div></div>
+        <pre class="log" id="jobLog">等待安装任务。</pre>
+      </section>
+    </section>
+  </main>
+  <script src="/assets/app.js"></script>
+</body>
+</html>
