@@ -1,5 +1,8 @@
 flowchart LR
-  User["用户 / 浏览器 Web UI :8765"] --> API["HTTP JSON API /api/*"]
+  User["用户"] --> GUI["桌面应用 h3-oneclick.app（Wails 原生窗口）▲ U-0.3.2"]
+  User --> WebUI["浏览器 Web UI :8765（CLI 服务模式）"]
+  GUI --> API["HTTP JSON API /api/*（AssetServer fallthrough）"]
+  WebUI --> API
   API --> Scan["detect: 硬件探测 GPU/显存/RAM/磁盘/ffmpeg + ComfyUI 实例扫描 ▲ U-0.3.1"]
   Scan --> Resolve["resolver: profile 门控 + 打分选档"]
   Resolve --> Plan["planner: 安装计划 + 资产复用判定"]

@@ -1,12 +1,15 @@
 # h3-oneclick 架构、功能与版本记录
 
-> 更新：2026-09-18。每次产品改动都必须同步到受影响的架构图节点、功能、Bug 与修复、版本记录。
+> 更新：2026-09-20。每次产品改动都必须同步到受影响的架构图节点、功能、Bug 与修复、版本记录。
 
 ## 一、架构图
 
 ```mermaid
 flowchart LR
-  User["用户 / 浏览器 Web UI :8765"] --> API["HTTP JSON API /api/*"]
+  User["用户"] --> GUI["桌面应用 h3-oneclick.app（Wails 原生窗口）▲ U-0.3.2"]
+  User --> WebUI["浏览器 Web UI :8765（CLI 服务模式）"]
+  GUI --> API["HTTP JSON API /api/*（AssetServer fallthrough）"]
+  WebUI --> API
   API --> Scan["detect: 硬件探测 GPU/显存/RAM/磁盘/ffmpeg + ComfyUI 实例扫描 ▲ U-0.3.1"]
   Scan --> Resolve["resolver: profile 门控 + 打分选档"]
   Resolve --> Plan["planner: 安装计划 + 资产复用判定"]
@@ -20,6 +23,7 @@ flowchart LR
 | 更新标记 | 版本 / 日期 | 已同步到图中节点 | 本次架构变更 |
 |---|---|---|---|
 | ▲ U-0.3.1 | 2026-09-18 | detect、install、Submit | h3-workflow-t2v 增加 jsDelivr same_file_mirror；补 UI→API workflow 转换脚本打通 /prompt 提交链路 |
+| ▲ U-0.3.2 | 2026-09-20 | GUI | 新增 Wails 桌面壳 `gui/`：内嵌同一份 Server.Handler 经 AssetServer fallthrough 提供 /api/*，前端为仪器控制台风格重写；CLI 服务模式与旧 Web UI 保留不变 |
 
 ## 二、功能地图
 
@@ -35,6 +39,7 @@ flowchart LR
 | F-08 | 端到端真实生成验收 | 已验证（daheng） | 是 | 是 | 否 | — | `scripts/convert_h3_prompt.py` 展开 subgraph → `/prompt` → mp4 产出 | ▲ U-0.3.1 |
 | F-09 | macOS external profile（h3.c 指引） | 仅探测+建议 | 是 | 是 | 否 | — | `macos-metal-h3c` external profile | |
 | F-10 | 生成任务 API / 远程访问 / LLM runtime | 未开发 | 否 | 否 | 是 | — | — | |
+| F-11 | 桌面 GUI（Wails 原生窗口，四步控制台） | 可用 | 是 | 是 | 否 | — | `gui/`：Wails v2 + 内嵌 Server.Handler；`gui/frontend/dist` 手写前端（无 npm 构建链） | ▲ U-0.3.2 |
 
 ## 三、Bug 与修复
 
@@ -49,3 +54,4 @@ flowchart LR
 |---|---|---|---|---|
 | v0.3.0 / 2026-08-24 | 初始版本：探测 + 解析 + 安装计划 + dry-run + Web UI | Go 单文件服务 + 内嵌 manifest + 内置页面 | macOS 链路验证到 plan/dry-run；Windows/Linux CUDA 未实测 | — |
 | v0.3.1 / 2026-09-18 | workflow 源 fallback 修复 + daheng 端到端真实生成验收 | jsDelivr same_file_mirror；`scripts/convert_h3_prompt.py` 提交官方 subgraph workflow | daheng 双 RTX 5090D 上 turbo-4-768 profile 真实出片：864×480、5.17s、含 AAC 音轨的 mp4；BUG-002 为例扫描限制遗留 | ▲ U-0.3.1 |
+| v0.3.2 / 2026-09-20 | 桌面 GUI + bj heyi 第二台机器全链路验收 | Wails v2 壳复用同一 Server.Handler；heyi 上 Playwright 模拟人工走完 UI 四步流 + ComfyUI 实出片 | heyi 真实生成 MiniMax_H3_00001_.mp4（864×480 5.17s）；GUI 在 macOS 构建通过（darwin/arm64）；Windows/Linux 需在对应平台执行 `wails build`；桌面壳内浏览器回执 callback 不可达（TEMPLATE_SAVED 即止，属预期） | ▲ U-0.3.2 |

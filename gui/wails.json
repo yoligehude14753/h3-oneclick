@@ -1,0 +1,22 @@
+{
+  "$schema": "https://wails.io/schemas/config.v2.json",
+  "name": "h3-oneclick",
+  "outputfilename": "h3-oneclick",
+  "frontend:install": "",
+  "frontend:build": "",
+  "frontend:dev:watcher": "",
+  "frontend:dev:serverUrl": "",
+  "frontend:dev:rebuild": "",
+  "wailsjsdir": "",
+  "author": {
+    "name": "h3-oneclick",
+    "email": ""
+  },
+  "info": {
+    "companyName": "",
+    "productName": "H3 OneClick",
+    "productVersion": "0.3.2",
+    "copyright": "",
+    "comments": "MiniMax-H3 one-click deployment console"
+  }
+}

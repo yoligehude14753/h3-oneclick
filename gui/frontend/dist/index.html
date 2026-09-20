@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>H3 OneClick</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="gui.css" />
+</head>
+<body>
+<div class="texture"></div>
+
+<header class="topbar">
+  <div class="brand">
+    <div class="mark">H3</div>
+    <div class="brand-text">
+      <h1>ONECLICK <span>CONTROL DECK</span></h1>
+      <p>MINIMAX-H3 · LOCAL DEPLOYMENT</p>
+    </div>
+  </div>
+  <div class="sys">
+    <div class="sys-item"><span class="k">VER</span><b id="sysVersion">—</b></div>
+    <div class="sys-item"><span class="k">SYS</span><b id="sysPlatform">—</b></div>
+    <div class="sys-item status"><span class="led" id="topLed"></span><b id="topStatus">STANDBY</b></div>
+  </div>
+</header>
+
+<main class="deck">
+  <aside class="rail">
+    <ol class="steps">
+      <li class="step" id="st1"><i class="led"></i><div><b>01 · PREFLIGHT</b><small>硬件与实例探测</small></div></li>
+      <li class="step" id="st2"><i class="led"></i><div><b>02 · STACK</b><small>配置栈决策</small></div></li>
+      <li class="step" id="st3"><i class="led"></i><div><b>03 · PLAN</b><small>源与资产计划</small></div></li>
+      <li class="step" id="st4"><i class="led"></i><div><b>04 · RUN</b><small>安装与运行回执</small></div></li>
+    </ol>
+    <div class="rail-foot">
+      <div class="rf-row"><span>STATE DIR</span><b id="sysStateDir" title="">—</b></div>
+      <div class="rf-row"><span>RUNTIME</span><b id="sysGo">—</b></div>
+    </div>
+  </aside>
+
+  <section class="content">
+
+    <!-- 01 PREFLIGHT -->
+    <section class="panel" id="p1">
+      <div class="p-head">
+        <span class="num">01</span>
+        <div class="p-title"><h2>环境扫描</h2><p>只读探测：GPU / 显存 / 后端 / 已有 ComfyUI</p></div>
+        <button class="btn primary" id="scanBtn"><i>▶</i> 开始扫描</button>
+      </div>
+      <div class="hw hidden" id="hwGrid">
+        <div class="hw-main">
+          <div class="hw-name" id="gpuName">—</div>
+          <div class="hw-sub" id="gpuMeta">—</div>
+          <div class="gpus" id="gpuCards"></div>
+        </div>
+        <div class="hw-side">
+          <div class="gauge"><div class="g-head"><span>RAM</span><b id="ramText">—</b></div><div class="bar"><i id="ramBar"></i></div></div>
+          <div class="gauge"><div class="g-head"><span>DISK FREE</span><b id="diskText">—</b></div><div class="bar"><i id="diskBar"></i></div></div>
+          <div class="kv"><span>DRIVER</span><b id="drvText">—</b></div>
+          <div class="kv"><span>FFMPEG</span><b id="ffText">—</b></div>
+        </div>
+      </div>
+      <div class="instances hidden" id="instBox">
+        <div class="box-label">COMFYUI INSTANCES</div>
+        <div id="instList"></div>
+      </div>
+      <div class="empty-note" id="scanEmpty">点击「开始扫描」读取本机硬件与已安装的 ComfyUI。</div>
+    </section>
+
+    <!-- 02 STACK -->
+    <section class="panel dim" id="p2">
+      <div class="p-head">
+        <span class="num">02</span>
+        <div class="p-title"><h2>配置栈决策</h2><p>门控 + 打分，偏好只参与排序</p></div>
+        <span class="pill" id="decPill">WAITING</span>
+      </div>
+      <div class="ctl">
+        <div class="seg" id="stepsSeg">
+          <button data-v="4" class="on">4-step</button><button data-v="8">8-step</button><button data-v="20">20-step</button>
+        </div>
+        <select class="sel" id="taskSel"><option value="t2v">T2V 文生视频</option><option value="i2v">I2V 图生视频</option><option value="r2v">R2V 参考视频</option></select>
+        <label class="num-in">时长 s<input id="secIn" type="number" min="1" max="30" value="5" /></label>
+        <button class="btn" id="recBtn" disabled>计算推荐</button>
+      </div>
+      <div class="decision hidden" id="decBox">
+        <div class="d-main">
+          <span class="k">EFFECTIVE PROFILE</span>
+          <b id="decProfile">—</b>
+          <code id="decStack">—</code>
+        </div>
+        <div class="d-reasons"><span class="k">GATE / REASONS</span><div class="chips" id="decReasons"></div></div>
+      </div>
+      <div class="alts" id="altRow"></div>
+    </section>
+
+    <!-- 03 PLAN -->
+    <section class="panel dim" id="p3">
+      <div class="p-head">
+        <span class="num">03</span>
+        <div class="p-title"><h2>安装计划</h2><p>主源直连，失败切同文件镜像</p></div>
+        <span class="pill" id="planPill">—</span>
+      </div>
+      <div class="ctl">
+        <label class="chk"><input type="checkbox" id="mirrorCk" checked /><i></i>允许同文件镜像</label>
+        <label class="chk"><input type="checkbox" id="altCk" /><i></i>兼容替代栈</label>
+        <label class="dir">安装目录<input id="dirIn" placeholder="默认：现有实例或 ./h3-oneclick-runtime" /></label>
+        <label class="chk"><input type="checkbox" id="bootCk" checked /><i></i>无实例时装运行时</label>
+        <button class="btn" id="planBtn" disabled>生成计划</button>
+        <button class="btn ghost" id="probeBtn" disabled>探测来源</button>
+      </div>
+      <div class="plan-meta hidden" id="planMeta"></div>
+      <table class="tbl hidden" id="assetTbl">
+        <thead><tr><th>资产</th><th>主源</th><th>镜像</th><th>目标路径</th><th>状态</th></tr></thead>
+        <tbody id="assetRows"></tbody>
+      </table>
+    </section>
+
+    <!-- 04 RUN -->
+    <section class="panel dim" id="p4">
+      <div class="p-head">
+        <span class="num">04</span>
+        <div class="p-title"><h2>运行回执</h2><p>每一步留下可读记录</p></div>
+        <span class="pill" id="jobPill">IDLE</span>
+      </div>
+      <div class="ctl">
+        <button class="btn primary big" id="installBtn" disabled><i>▶</i> 开始安装</button>
+        <button class="btn" id="launchBtn" disabled>启动 ComfyUI</button>
+        <button class="btn" id="tplBtn" disabled>打开 H3 模板</button>
+      </div>
+      <div class="progress"><div class="fill" id="progFill"></div><span id="progText">—</span></div>
+      <div class="run-grid">
+        <div class="rg"><span class="k">STATE</span><b id="jobState">—</b></div>
+        <div class="rg"><span class="k">SOURCE</span><b id="jobSource">—</b></div>
+        <div class="rg"><span class="k">MESSAGE</span><b id="jobMsg">—</b></div>
+      </div>
+      <pre class="log" id="logBox">等待任务。</pre>
+    </section>
+
+  </section>
+</main>
+<script src="gui.js"></script>
+</body>
+</html>
