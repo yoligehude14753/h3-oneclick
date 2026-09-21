@@ -6,9 +6,11 @@
 
 ## Demo
 
-<video src="docs/media/h3-oneclick-demo.mp4" controls muted></video>
+<a href="docs/media/h3-oneclick-demo.mp4">
+  <img src="docs/media/h3-oneclick-demo.gif" alt="H3 OneClick demo — scan → resolve → install → generate" width="100%">
+</a>
 
-40 秒实录（北京 heyi · RTX 5090 D ×2）：环境扫描 → `turbo-4-768` 命中 → 资产复用/下载 → `READY_FOR_BASELINE` → ComfyUI 启动 + workflow 写入 → **末尾为安装完成后真实生成的 mp4（原始输出，未剪辑）**。
+40 秒实录（北京 heyi · RTX 5090 D ×2）：环境扫描 → `turbo-4-768` 命中 → 资产复用/下载 → `READY_FOR_BASELINE` → ComfyUI 启动 + workflow 写入 → **末尾为安装完成后真实生成的 mp4（原始输出，未剪辑）**。点图看完整有声版。
 
 ## 形态
 
