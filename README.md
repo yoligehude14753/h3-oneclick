@@ -35,12 +35,17 @@
 
 ## Quick start
 
-```sh
-# CLI + Web UI → http://127.0.0.1:8765
-go run ./cmd/h3-oneclick
+Download a binary from [Releases](https://github.com/yoligehude14753/h3-oneclick/releases) (unsigned builds — macOS may need `xattr -d com.apple.quarantine`), then:
 
-# Desktop app (macOS, needs wails CLI)
-cd gui && wails build   # → gui/build/bin/h3-oneclick.app
+```sh
+./h3-oneclick   # → http://127.0.0.1:8765
+```
+
+Or from source:
+
+```sh
+go run ./cmd/h3-oneclick                    # CLI + Web UI
+cd gui && wails build                       # desktop app → gui/build/bin/h3-oneclick.app
 ```
 
 Single-binary builds:
